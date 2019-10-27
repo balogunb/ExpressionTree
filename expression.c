@@ -5,10 +5,7 @@ Exp* createExp(char* x){
 	size = strlen(x);
 	printf("Initial\n");
 	printf("%s\n",x);
-
 	Exp* exp = (Exp*)malloc(sizeof(Exp));
-
-
 
 	if(x[0] == '('){//If it has an operator 
 		createExpHelper2(exp,x);
@@ -138,9 +135,6 @@ void createExpHelper(Exp* exp,char* x){
 			pntrN[i] = x[i + length +1];
 			printf("%c\n",x[i + length + 1]);
 		}
-
-
-	
 		printf("got the 42\n");
 		printf("%s\n",pntrN);
 		Exp* rest = (Exp*)malloc(sizeof(Exp));
@@ -168,27 +162,8 @@ void printExpression(Exp* head){
 		strcat(printVal,"(");
 		printExpHelper1(head, printVal);
 		strcat(printVal,")");
-
-
 	}
-
-	
-
 	printf("%s\n",printVal);
-
-}
-
-void printExpHelper2(Exp* curr,char * values ){
-	if (curr == 0) return;
-	strcat(values,curr->symbol);
-	// if(curr->rest != 0){
-	// 	if(curr->first->first != 0){
-	// 		char* sym;
-	// 		strcat(sym,curr->first->first->symbol);
-	// 		printf(sym);
-	// 		printf("Symbol before\n");
-	// 	}
-	// }
 }
 
 
@@ -199,10 +174,6 @@ void printExpHelper1(Exp* curr,char * values ){
 	//if its deepest node
 	if (curr->first == 0 && curr->rest == 0){
 		strcat(values,curr->symbol);
-		//for(int i= 0;i < strlen(curr->symbol);i++){
-			//printf("%s",(curr->symbol) );
-		//	printf("\n");
-		//}
 		return;
 	}
 
@@ -218,8 +189,6 @@ void printExpHelper1(Exp* curr,char * values ){
 		
 		return;
 	}
-	
-
 
 	//if node is the inner part of an expression
 	if(curr->first != 0 && curr->first->symbol != 0){
@@ -231,69 +200,6 @@ void printExpHelper1(Exp* curr,char * values ){
 			printExpHelper1(curr->rest,values);
 		}
 	}
-
-
-
-
-	// else{
-
-
-	// 	if(curr->first != 0 && curr->first->first == 0){
-	// 		//strcat(values,curr->first->symbol);
-	// 		printExpHelper1(curr->first,values);
-	// 		if(curr->rest != 0){
-	// 			strcat(values," ");
-	// 			printExpHelper1(curr->rest,values);
-	// 		}
-	// 	}
-
-	// 	//if it is an expression 
-	// 	if(curr->first != 0 && curr->first->first != 0 ){
-	// 		strcat(values,"(");
-	// 		printExpHelper1(curr->first,values);
-	// 		strcat(values,")");
-	// 	}
-	// 	// if(curr->rest != 0 && (curr->rest->first != 0 ||curr->rest->symbol != 0)){
-	// 	// 	strcat(values," ");
-	// 	// 	printExpHelper1(curr->rest,values);
-	// 	// }
-		
-	// }
-
-
-
-
-	
-	// if(curr->rest != 0){
-
-
-	// 	if(curr->first->first != 0){
-	// 		char* sym;
-	// 		strcat(sym,curr->first->first->symbol);
-	// 		printf(sym);
-	// 		printf("Symbol before\n");
-	// 	}
-	// 	//if(sym == "+" ||sym == "-"  ||sym == "*"){
-	// 		//strcat(values,"(");
-	// 		//printf("got here\n");
-	// 		printExpHelper(curr->first, values);
-	// 		//strcat(values,")");
-	// 	//}
-	// 	//else printExpHelper(curr->first, values);
-
-	// }
-
-	// if(curr->first == 0 && curr->rest == 0){
-	// 	printf("%s\n",curr->symbol);
-	// 	strcat(values," ");
-	// 	strcat(values,curr->symbol);
-	// 	//printf("%s\n",values);
-	// 	return;
-	// }
-
-	// if(curr->rest != NULL){
-	// 	printExpHelper(curr->rest, values);
-	// }
 }
 
 
