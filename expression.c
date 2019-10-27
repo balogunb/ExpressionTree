@@ -2,7 +2,7 @@
 
 
 Exp* createExp(char* x){
-	size = strlen(x);
+	size = size + strlen(x);
 	printf("Initial\n");
 	printf("%s\n",x);
 	Exp* exp = (Exp*)malloc(sizeof(Exp));
@@ -160,14 +160,14 @@ void printExpression(Exp* head){
 	}
 	else{
 		strcat(printVal,"(");
-		printExpHelper1(head, printVal);
+		printExpHelper(head, printVal);
 		strcat(printVal,")");
 	}
 	printf("%s\n",printVal);
 }
 
 
-void printExpHelper1(Exp* curr,char * values ){
+void printExpHelper(Exp* curr,char * values ){
 	if (curr == 0) return;
 
 
@@ -180,11 +180,11 @@ void printExpHelper1(Exp* curr,char * values ){
 	//if node is an expression;
 	if (curr->first != 0 && curr->first->first != 0){
 		strcat(values,"(");
-		printExpHelper1(curr->first,values);
+		printExpHelper(curr->first,values);
 		strcat(values,")");
 		if(curr->rest){
 			strcat(values," ");
-			printExpHelper1(curr->rest,values);
+			printExpHelper(curr->rest,values);
 		}
 		
 		return;
@@ -192,23 +192,238 @@ void printExpHelper1(Exp* curr,char * values ){
 
 	//if node is the inner part of an expression
 	if(curr->first != 0 && curr->first->symbol != 0){
-		printExpHelper1(curr->first,values);
+		printExpHelper(curr->first,values);
 
 		//if it had other values
 		if(curr->rest != 0){
 			strcat(values," ");
-			printExpHelper1(curr->rest,values);
+			printExpHelper(curr->rest,values);
 		}
 	}
 }
 
 
+void evaluate(Exp* curr){
+	//If Exp is empty
+	if(curr == NULL){
+		printf("Expression has not been initialized");
+		return;
+	} 
+
+	printf("Start Evaluating\n");
+
+	if(curr->rest == 0){
+		printf("%ld\n", atol(curr->symbol));
+	}
+	else{
+		char* symb = (char*)malloc(10 * sizeof(char));
+				strcpy(symb, curr->first->symbol);
+				if (strcmp(symb, "+") == 0){
+					printf("%ld\n",evaluateHelper(curr->rest,&symb));
+    			}
+    			else if(strcmp(symb, "-") == 0){
+					printf("%ld\n", evaluateHelper(curr->rest,&symb));
+				}
+				else if(strcmp(symb,"*") == 0){
+					printf("%ld\n",evaluateHelper(curr->rest,&symb));
+				}
+			} 
+	}
+
+long int evaluateHelper(Exp* curr,char **op){
+	//if (curr == 0) return;
 
 
+	//if its deepest node
+	if (curr->first == 0 && curr->rest == 0){
+		//check if it is not an expression
+			//printf("hmm%s\n",curr->symbol );
+			//printf("hmm%s\n",*op );
+			//printf("hmm22%s\n",*op );
+			
+			char* sym = curr->symbol;
+			//printf("com%d\n", strcmp(*op, "x"));
+
+		if(strcmp(sym, "+") != 0 && strcmp(sym, "-") != 0 && strcmp(sym, "*") != 0){
+			//printf("hmm%s\n",curr->symbol );
+			//printf("hmm%s\n",*op );
+			return atol(curr->symbol);
+		}
+		
+	}
+
+	//if node is an expression;
+	if (curr->first != 0 && curr->first->first != 0){
+		//strcat(values,"(");
+		free(*op);
+		*op = (char*)malloc(10 * sizeof(char));
+		strcpy(*op, curr->first->first->symbol);
+		//printf("%s\n","got here" );
+		//printf("%s\n",*op );
 
 
+		//printf("1%s\n",curr->first->first->symbol );
+		//printf("1%s\n",*op );
+		//evaluateHelper(curr->first,op);
+
+		//printExpHelper(curr->first,values);
+		//strcat(values,")");
+		if(curr->rest){
+			if (strcmp(*op, "+") == 0){
+				return evaluateHelper(curr->first,op) + evaluateHelper(curr->rest,op);
+    		}
+    		else if(strcmp(*op, "-") == 0){
+				return evaluateHelper(curr->first,op) - evaluateHelper(curr->rest,op);
+			}
+			else if(strcmp(*op,"*") == 0){
+				return evaluateHelper(curr->first,op) * evaluateHelper(curr->rest,op);
+			}
+		}
+		
+		return evaluateHelper(curr->first,op);//et here if there is no rest
+	}
+
+	//if node is the inner part of an expression
+	if(curr->first != 0 && curr->first->symbol != 0){
+		//return evaluateHelper(curr->first, op);
+		//printf("%s\n","got here" );
+		//printf("%s\n",*op );
+		//printf("sym%s\n",curr->first->symbol );
+		//char* symb = curr->first->symbol;
+		//if it had other values
+		if(curr->rest != 0){
+			if (strcmp(*op, "+") == 0){
+				return evaluateHelper(curr->first,op) + evaluateHelper(curr->rest,op);
+    		}
+    		else if(strcmp(*op, "-") == 0){
+				return evaluateHelper(curr->first,op) - evaluateHelper(curr->rest,op);
+			}
+			else if(strcmp(*op,"*") == 0){
+				return evaluateHelper(curr->first,op) * evaluateHelper(curr->rest,op);
+			}
+		}		
+		else return evaluateHelper(curr->first,op);
+	}
+}	
 
 
-//void evaluate(ExpTree*);
-//void appendExpression(ExpTree*, char*);
-//void printSubset(char*);
+	// //if its an inner expression
+	// if(curr->first != 0 && curr->first->symbol != 0){
+	// 	char* pntr = curr->first->symbol;
+	// 	int boolean = 0;
+
+	// 	//if it is an operand
+
+	// 	if (strcmp(pntr, "+") == 0){
+	// 		op = "+";
+	// 		if(curr->rest->first->symbol != 0){
+	// 			boolean = 1;
+	// 			int nextInt = atol(curr->rest->first->symbol);
+	// 			return(nextInt + evaluateHelper(curr->rest, op));
+	// 		}
+ //    	}
+ //    	else if(strcmp(pntr, "-") == 0){
+ //    		op = "-";
+	// 		if(curr->rest->first->symbol != 0){
+	// 			boolean =1;
+	// 			int nextInt = atol(curr->rest->first->symbol);
+	// 			return(nextInt - evaluateHelper(curr->rest, op));
+	// 		}
+ //    	}
+ //    	else if(strcmp(pntr, "*") == 0){
+ //    		op = "*";
+ //    		if(curr->rest->first->symbol != 0){
+ //    			boolean =1;
+	// 			int nextInt = atol(curr->rest->first->symbol);
+	// 			return(nextInt * evaluateHelper(curr->rest, op));
+	// 		}
+ //    	}
+ //    	if(boolean == 0){//if it is not an operand 
+
+ //    		//check if it has a rest
+ //    		if(curr->rest != 0){
+
+ //    			//if rest is a operation 
+ //    			if(curr->rest->first->first != 0){
+ //    				return evaluateHelper(curr->rest->first,"");
+ //    			}
+
+ //    			else{//if rest is a number
+ //    				int nextInt1 = atol(curr->rest->first->symbol);
+ //    				if (strcmp(op, "+") == 0){
+	// 					return(nextInt1 + evaluateHelper(curr->rest, op));
+ //    				}
+ //    				else if(strcmp(pntr, "-") == 0){
+	// 					return(nextInt1 - evaluateHelper(curr->rest, op));
+ //    				}
+ //    				else if(strcmp(pntr, "*") == 0){
+	// 					return(nextInt1 * evaluateHelper(curr->rest, op));
+ //    				}
+ //    			}
+ //    		}
+	// 	}
+	// }
+
+void appendExpression(Exp** exp, char* c){
+	Exp* pntr = *exp;
+	while(pntr->rest != 0){
+		pntr = pntr->rest; 
+	}
+	if(c[0] == '('){
+	pntr->rest = (Exp*)malloc(sizeof(Exp));
+	pntr->rest->first = (Exp*)malloc(sizeof(Exp));
+	pntr->rest->first = createExp(c);
+	}
+	else{
+		pntr->rest = (Exp*)malloc(sizeof(Exp));
+		pntr->rest = createExp(c);
+	}
+}
+void printSubset(Exp* exp, char* s){
+	Exp* pntr = exp;
+	for(int i = 0; i < strlen(s);i++){
+		if(s[i]  == 'f'){
+			if(pntr->first == 0){
+				printf("invalid Expression\n");
+				return;
+			}
+			pntr = pntr->first;
+		}
+		if(s[i]  == 'r'){
+			if(pntr->rest == 0){
+				printf("invalid Expression\n");
+				return;
+			}
+			pntr = pntr->rest;
+		}
+	}
+	printf("%s\n","printing subset" );
+	if(pntr->symbol != 0){
+		printf("%s\n",pntr->symbol );
+		return;
+	}
+	char *check = (char*)malloc(size * sizeof(char));
+	if(pntr->first->symbol == 0){
+		printExpHelper(pntr,check);
+		printf("%s\n",check );
+		return;
+	}
+
+
+	strcpy(check,pntr->first->symbol);
+	printf("%s\n",check );
+	printf("%d\n",strcmp(check, "+") );
+
+
+	//if it is pointing to a node whose first's symbol is not an expression
+	if(strcmp(check, "+") == 1 && strcmp(check, "-") == 1 && strcmp(check, "*") == 1){
+		printf("invalid Expression\n");
+		return;
+	}
+
+	printExpression(pntr);//if it gets here it is an expression
+
+	
+
+
+}

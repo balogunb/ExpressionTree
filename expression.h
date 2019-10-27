@@ -14,22 +14,16 @@ typedef struct Exp {
 } Exp;
 
 
-// typedef struct ExpTree {
-// 	struct Exp* root;
-// } ExpTree;
-
-
 int size;
-//bool firstCase;
 extern Exp* createExp(char*);
-//extern Exp* createTree(char*);
 void createExpHelper(Exp*,char* );
 void createExpHelper2(Exp*,char*);
 extern void printExpression(Exp*);
-void printExpHelper1(Exp* head,char * values );
+void printExpHelper(Exp*,char *);
 extern void evaluate(Exp*);
-extern void appendExpression(Exp*, char*);
-extern void printSubset(char*);
+long int evaluateHelper(Exp*,char**);
+extern void appendExpression(Exp**, char*);
+extern void printSubset(Exp*, char*);
 
 
 #endif
