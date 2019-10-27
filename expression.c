@@ -7,10 +7,15 @@ Exp* createExp(char* x){
 	printf("%s\n",x);
 
 	Exp* exp = (Exp*)malloc(sizeof(Exp));
-	if(x[0] == '('){
+
+
+
+	if(x[0] == '('){//If it has an operator 
 		createExpHelper2(exp,x);
 	}
-	else createExpHelper(exp,x);
+	else{//if its just an element by itself
+		exp->symbol = x;
+	}
 	return exp;
 }
 
@@ -23,13 +28,21 @@ void createExpHelper2(Exp* rest,char* x){
 	char* z = (char*)malloc(newLength*sizeof(char));
 	//char symbol = x[1];
 	//add all char of subexpression to a new char*
-	for(int i = 3; i < newLength;i++){
-		z[i-3] = x[i];	
-	}
 	Exp* first = (Exp*)malloc(sizeof(Exp));
-	Exp* newRest = (Exp*)malloc(sizeof(Exp));
 	first->symbol = malloc(2 * sizeof(char));
 	(first->symbol)[0] = x[1];
+	
+	 for(int i = 3; i < newLength;i++){
+	 	z[i-3] = x[i];	
+
+	 }
+	 z[newLength] = 0;//terminate z
+
+
+	printf("Special%c\n",z[0]);
+
+	
+	Exp* newRest = (Exp*)malloc(sizeof(Exp));
 	printf("got the 22\n");
 	printf("%s\n",z );
 	rest->first = first;
@@ -37,16 +50,8 @@ void createExpHelper2(Exp* rest,char* x){
 	createExpHelper(newRest,z);	
 }
 
-
-
-void createExpHelper(Exp* exp,char* x){
-	
-
+void createExpHelper(Exp* exp,char* x){	
 	if(strlen(x) == 0)return;
-	//if no more characters left return
-	// if(x[0] == ')'){
-	// 	return;
-	// } 
 
 	printf("got the 11\n");
 	printf("%s\n",x);
@@ -55,8 +60,12 @@ void createExpHelper(Exp* exp,char* x){
 	//int currLength = strlen(x);
 	if(strlen(x) == 1){
 		printf("got the 12\n");
-		exp->symbol = x;
-		printf("%s\n",exp->symbol );
+		Exp* first = (Exp*)malloc(sizeof(Exp));
+		//first->symbol = x;
+		first->symbol = malloc((strlen(x)+1) *sizeof(char));
+		strcpy(first->symbol,x);
+		exp->first = first;
+		printf("%s\n",first->symbol );
 		return;
 	}
 
@@ -102,74 +111,198 @@ void createExpHelper(Exp* exp,char* x){
 			printf("%s\n",back);
 			createExpHelper(rest,back);
 		}
-			// first->symbol = malloc(2 * sizeof(char));
-			// (first->symbol)[0] = x[1];
-			// printf("got the 2\n");
-			// printf("%s\n",first->symbol );
-			// exp->first = first;
-			// exp->rest = rest;
-			// createExpHelper2(first,y);//apppends only items in parenthenses
-			// createExpHelper(rest,y);//work on rest 
-			// return;
+		return;
 	}
 
-	//if it gets here the first thing is a number 
+	//if it gets here the first thing is a number
+	char array[strlen(x) + 1];
+	strcpy(array,x);
+	char *pntr = strtok(array," ");
+	printf("got the 41\n");
+	printf("%s\n",x );
 
-	//char temp = x[0];
-	// int newLength = strlen(x) - 1;
-	// char* z = (char*)malloc(newLength*sizeof(char));
+	Exp* first = (Exp*)malloc(sizeof(Exp));
+	first->symbol = malloc((strlen(pntr)+1) *sizeof(char));
+	//first->symbol = pntr;
+	strcpy(first->symbol,pntr);
+	exp->first = first;
+	printf("Actual%s\n",first->symbol);
 
-	// //add all char of subexpression to a new char*
-	// for(int i = 2; i < strlen(x);i++){
-	// 	z[i-2] = x[i];	
-	// }
 
-	// Exp* first = (Exp*)malloc(sizeof(Exp));
-	// Exp* rest = (Exp*)malloc(sizeof(Exp));
-	// first->symbol = malloc(2 * sizeof(char));
-	// (first->symbol)[0] = x[0];
-	// exp->first = first;
-	// exp->rest = rest;
-	// createExpHelper(rest,z);
+	int length = strlen(pntr);
+
+	if(strlen(x) != length){
+		char* pntrN = (char*)malloc(strlen(x) * sizeof(char));
+
+		for(int i = 0; i < strlen(x);i++){
+			pntrN[i] = x[i + length +1];
+			printf("%c\n",x[i + length + 1]);
+		}
+
+
+	
+		printf("got the 42\n");
+		printf("%s\n",pntrN);
+		Exp* rest = (Exp*)malloc(sizeof(Exp));
+		exp->rest = rest;
+		createExpHelper(rest,pntrN);
+	}
+	
 }
 
 
 void printExpression(Exp* head){
-
 	//If Exp is empty
 	if(head == NULL){
 		printf("Expression has not been initialized");
 		return;
 	} 
 
-
+	printf("Start Print\n");
 	char* printVal = (char*)malloc(size * sizeof(char));
-	printExpHelper(head, printVal);
+
+	if(head->rest == 0){
+		strcat(printVal,head->symbol);
+	}
+	else{
+		strcat(printVal,"(");
+		printExpHelper1(head, printVal);
+		strcat(printVal,")");
+
+
+	}
+
+	
 
 	printf("%s\n",printVal);
 
 }
 
+void printExpHelper2(Exp* curr,char * values ){
+	if (curr == 0) return;
+	strcat(values,curr->symbol);
+	// if(curr->rest != 0){
+	// 	if(curr->first->first != 0){
+	// 		char* sym;
+	// 		strcat(sym,curr->first->first->symbol);
+	// 		printf(sym);
+	// 		printf("Symbol before\n");
+	// 	}
+	// }
+}
 
-void printExpHelper(Exp* curr,char * values ){
-	if (curr == NULL) return;
+
+void printExpHelper1(Exp* curr,char * values ){
+	if (curr == 0) return;
 
 
-	if(curr->first == 0 && curr->rest == 0){
+	//if its deepest node
+	if (curr->first == 0 && curr->rest == 0){
 		strcat(values,curr->symbol);
+		//for(int i= 0;i < strlen(curr->symbol);i++){
+			//printf("%s",(curr->symbol) );
+		//	printf("\n");
+		//}
 		return;
 	}
 
+	//if node is an expression;
+	if (curr->first != 0 && curr->first->first != 0){
+		strcat(values,"(");
+		printExpHelper1(curr->first,values);
+		strcat(values,")");
+		if(curr->rest){
+			strcat(values," ");
+			printExpHelper1(curr->rest,values);
+		}
+		
+		return;
+	}
+	
 
 
-	if(curr->first != NULL){
-		printExpHelper(curr->first, values);
+	//if node is the inner part of an expression
+	if(curr->first != 0 && curr->first->symbol != 0){
+		printExpHelper1(curr->first,values);
+
+		//if it had other values
+		if(curr->rest != 0){
+			strcat(values," ");
+			printExpHelper1(curr->rest,values);
+		}
 	}
 
-	if(curr->rest != NULL){
-		printExpHelper(curr->first, values);
-	}
+
+
+
+	// else{
+
+
+	// 	if(curr->first != 0 && curr->first->first == 0){
+	// 		//strcat(values,curr->first->symbol);
+	// 		printExpHelper1(curr->first,values);
+	// 		if(curr->rest != 0){
+	// 			strcat(values," ");
+	// 			printExpHelper1(curr->rest,values);
+	// 		}
+	// 	}
+
+	// 	//if it is an expression 
+	// 	if(curr->first != 0 && curr->first->first != 0 ){
+	// 		strcat(values,"(");
+	// 		printExpHelper1(curr->first,values);
+	// 		strcat(values,")");
+	// 	}
+	// 	// if(curr->rest != 0 && (curr->rest->first != 0 ||curr->rest->symbol != 0)){
+	// 	// 	strcat(values," ");
+	// 	// 	printExpHelper1(curr->rest,values);
+	// 	// }
+		
+	// }
+
+
+
+
+	
+	// if(curr->rest != 0){
+
+
+	// 	if(curr->first->first != 0){
+	// 		char* sym;
+	// 		strcat(sym,curr->first->first->symbol);
+	// 		printf(sym);
+	// 		printf("Symbol before\n");
+	// 	}
+	// 	//if(sym == "+" ||sym == "-"  ||sym == "*"){
+	// 		//strcat(values,"(");
+	// 		//printf("got here\n");
+	// 		printExpHelper(curr->first, values);
+	// 		//strcat(values,")");
+	// 	//}
+	// 	//else printExpHelper(curr->first, values);
+
+	// }
+
+	// if(curr->first == 0 && curr->rest == 0){
+	// 	printf("%s\n",curr->symbol);
+	// 	strcat(values," ");
+	// 	strcat(values,curr->symbol);
+	// 	//printf("%s\n",values);
+	// 	return;
+	// }
+
+	// if(curr->rest != NULL){
+	// 	printExpHelper(curr->rest, values);
+	// }
 }
+
+
+
+
+
+
+
+
 //void evaluate(ExpTree*);
 //void appendExpression(ExpTree*, char*);
 //void printSubset(char*);

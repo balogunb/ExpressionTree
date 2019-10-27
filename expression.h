@@ -26,7 +26,7 @@ extern Exp* createExp(char*);
 void createExpHelper(Exp*,char* );
 void createExpHelper2(Exp*,char*);
 extern void printExpression(Exp*);
-void printExpHelper(Exp* head,char * values );
+void printExpHelper1(Exp* head,char * values );
 extern void evaluate(Exp*);
 extern void appendExpression(Exp*, char*);
 extern void printSubset(char*);
