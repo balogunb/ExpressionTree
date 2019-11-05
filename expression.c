@@ -70,13 +70,13 @@ void createExpHelper(Exp* exp,char* x){
 	if(strlen(x) == 0)return;
 
 	//if last operand append to first
-	if(strlen(x) == 1){
-		Exp* first = (Exp*)malloc(sizeof(Exp));
-		first->symbol = malloc((strlen(x)+1) *sizeof(char));
-		strcpy(first->symbol,x);
-		exp->first = first;
-		return;
-	}
+	// if(strlen(x) == 1){
+	// 	Exp* first = (Exp*)malloc(sizeof(Exp));
+	// 	first->symbol = malloc((strlen(x)+1) *sizeof(char));
+	// 	strcpy(first->symbol,x);
+	// 	exp->first = first;
+	// 	return;
+	// }
 
 	//if first operand is in the
 	//form "(<operator> <space separated list of operands>)"
@@ -337,28 +337,10 @@ void appendExpression(Exp** exp, char* c){
 
 	//if char* to append is an expression 
 	if(c[0] == '('){
-
-		//if lone operand and lone number
-		// ie "(+ 4)" , "(- 7)" ,"(* 15)"
 		Exp* newExp = createExp(c);
-		if(newExp->rest->rest == 0){
-			pntr->rest = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first->first = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first->first->symbol = (char*)malloc(3* sizeof(char));
-			pntr->rest->first->rest = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first->rest->first = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first->rest->first->symbol = (char*)malloc(50* sizeof(char));
-			strcpy(pntr->rest->first->first->symbol,newExp->first->symbol);
-			strcpy(pntr->rest->first->rest->first->symbol,newExp->rest->first->symbol);
-		}
-		else{
-			pntr->rest = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first = (Exp*)malloc(sizeof(Exp));
-			pntr->rest->first = createExp(c);
-		}
-
-		
+		pntr->rest = (Exp*)malloc(sizeof(Exp));
+		pntr->rest->first = (Exp*)malloc(sizeof(Exp));
+		pntr->rest->first = createExp(c);		
 	}
 
 	else{//if it a lone integer
